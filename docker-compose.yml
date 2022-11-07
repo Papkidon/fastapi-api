@@ -1,0 +1,71 @@
+version: '3.7'
+
+services:
+  download_cars_service:
+    build: ./services/download_cars_service
+    command: uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./services/download_cars_service/:/api/
+    ports:
+      - "8001:8000"
+    environment:
+      - API_KEY=123
+
+  query_cars_service:
+    build: ./services/query_cars_service
+    command: bash -c "while !</dev/tcp/cars_db/5432; do sleep 1; done; uvicorn api.main:app --reload --host 0.0.0.0 --port 8000"
+    volumes:
+      - ./services/query_cars_service/:/api/
+    ports:
+      - "8002:8000"
+    environment:
+      - API_KEY=123
+      - DATABASE_URL=postgresql://user:password@cars_db/cars
+
+  store_cars_service:
+    build: ./services/store_cars_service
+    command: bash -c "while !</dev/tcp/cars_db/5432; do sleep 1; done; uvicorn api.main:app --reload --host 0.0.0.0 --port 8000"
+    volumes:
+      - ./services/store_cars_service/:/api/
+    ports:
+      - "8003:8000"
+    environment:
+      - API_KEY=123
+      - DATABASE_URL=postgresql://user:password@cars_db/cars
+
+  combined_cars_service:
+    build: ./services/combined_cars_service
+    command: bash -c "while !</dev/tcp/cars_db/5432; do sleep 1; done; uvicorn api.main:app --reload --host 0.0.0.0 --port 8000"
+    volumes:
+      - ./services/combined_cars_service/:/api/
+    ports:
+      - "8004:8000"
+    environment:
+      - API_KEY=123
+      - STORE_API_KEY=123
+      - DOWNLOAD_API_KEY=123
+      - DATABASE_URL=postgresql://user:password@cars_db/cars
+
+  cars_db:
+    image: postgres:14.5-alpine
+    #volumes:
+    #  - postgres_cars_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cars
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx_config.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - download_cars_service
+      - store_cars_service
+      - query_cars_service
+
+#volumes:
+#  postgres_cars_data:
