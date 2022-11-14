@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from .. import main
-from ..store.db.db import Base
+from ..store.db.connection.db import Base
 from ..store.router.store import get_db
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
@@ -40,10 +40,12 @@ def test_db():
 def anyio_backend():
     return 'asyncio'
 
+
 @pytest.fixture()
 def headers():
     return {'Content-Type': 'application/json',
             'Authorization': os.getenv('API_KEY')}
+
 
 @pytest.fixture(scope='session')
 def data_usage_correct():

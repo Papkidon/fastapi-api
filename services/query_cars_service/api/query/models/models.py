@@ -1,5 +1,5 @@
 from sqlalchemy import DateTime, Column, Float, String, Date, Integer
-from ..db.db import Base
+from ..db.connect.db import Base
 
 
 class Cars(Base):

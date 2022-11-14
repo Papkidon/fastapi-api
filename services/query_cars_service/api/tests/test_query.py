@@ -69,7 +69,7 @@ async def test_query_incorrect_cars_info(headers):
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.get('/api/v1/query/car-info/maluch',
                                 headers=headers)
-    assert response.status_code == 404
+    assert response.status_code == 422
 
 
 # -------------------------- AVERAGE --------------------------

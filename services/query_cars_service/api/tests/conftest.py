@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import datetime
 
-from ..query.db.db import Base
+from ..query.db.connect.db import Base
 from ..query.models.models import Porsche, Audi, Tesla, Cars, Average
 
 from .. import main

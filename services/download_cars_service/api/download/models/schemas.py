@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 # Cars
-class CarData(BaseModel):
+class UsageDataNested(BaseModel):
     datetime: datetime
     soc: str
     chargingPower: int
@@ -12,9 +12,9 @@ class CarData(BaseModel):
 
 
 # Porsche, Tesla, Audi
-class CarStats(BaseModel):
+class UsageData(BaseModel):
     vin: str
-    carStatistics: Union[list[CarData], None] = None
+    carStatistics: Union[list[UsageDataNested], None] = None
 
     class Config:
         schema_extra = {
@@ -38,7 +38,7 @@ class CarStats(BaseModel):
 
 
 # Car Information
-class CarInfo(BaseModel):
+class CarInfoNested(BaseModel):
     made: str
     model: str
     year: date
@@ -46,8 +46,8 @@ class CarInfo(BaseModel):
 
 
 # Porsche, Tesla, Audi
-class Car(BaseModel):
-    cars: Union[list[CarInfo], None] = None
+class CarInfo(BaseModel):
+    cars: Union[list[CarInfoNested], None] = None
 
     class Config:
         schema_extra = {

@@ -1,5 +1,5 @@
 from sqlalchemy import DateTime, Column, Float, String, Date, Integer
-from ..db.db import Base
+from ..db.connection.db import Base
 
 
 class Cars(Base):
@@ -11,8 +11,6 @@ class Cars(Base):
     year = Column(Date)
     vin = Column(String(20))
 
-
-class CreateCar(Cars):
     class Config:
         orm_mode = True
 
@@ -27,8 +25,6 @@ class Tesla(Base):
     chargingPower = Column(Float, index=True)
     status = Column(String, index=True)
 
-
-class CreateTesla(Tesla):
     class Config:
         orm_mode = True
 
@@ -43,8 +39,6 @@ class Audi(Base):
     chargingPower = Column(Float, index=True)
     status = Column(String, index=True)
 
-
-class CreateAudi(Audi):
     class Config:
         orm_mode = True
 
@@ -59,8 +53,6 @@ class Porsche(Base):
     chargingPower = Column(Float, index=True)
     status = Column(String, index=True)
 
-
-class CreatePorsche(Porsche):
     class Config:
         orm_mode = True
 
@@ -72,7 +64,5 @@ class Average(Base):
     vin = Column(String, index=True)
     average = Column(Float, index=True)
 
-
-class CreateAverage(Average):
     class Config:
         orm_mode = True
