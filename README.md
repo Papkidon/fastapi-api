@@ -6,7 +6,8 @@
 | --- | --- |
 | Language  | Python  |
 | Framework  | FastAPI  |
-| ORM | SQLAlchemy, Pydantic |
+| ORM | SQLAlchemy |
+| Data validator | Pydantic |
 | Database | PostgreSQL |
 | Testing | Pytest 
 
