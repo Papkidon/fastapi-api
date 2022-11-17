@@ -7,10 +7,19 @@ from fastapi_utils.cbv import cbv
 import requests
 import os
 
+"""Combined cars service implements the following endpoints : 
+
+1. '/' - returns 'Combined service is up' when service is reachable,
+2. '/store-all' - download cars through Download cars service and store them via Store cars service.
+
+"""
+
 combined = InferringRouter()
 
 
 def get_db():
+    """Get new database connection from connection pool
+    and close after code execution"""
     db = SessionLocal()
     try:
         yield db
@@ -19,18 +28,24 @@ def get_db():
 
 
 def download_and_store(download: str, store: str) -> None:
-    headers = {'Content-Type': 'application/json',
-               'Authorization': os.getenv('DOWNLOAD_API_KEY')}
+    """Download and store cars in the database
+    :param: download: string with Download cars service endpoint
+    :param: store: string with Store cars service endpoint
+    :return: None: if successful, else throws some exception
+    """
+    headers_download = {'Content-Type': 'application/json',
+                        'Authorization': os.getenv('DOWNLOAD_API_KEY')}
+    headers_store = {'Content-Type': 'application/json',
+                     'Authorization': os.getenv('STORE_API_KEY')}
 
     download_cars = requests.get(f'http://download_cars_service:8000/api/v1/download/{download}',
-                                 headers=headers).json()
+                                 headers=headers_download).json()
     if not download_cars:
         raise HTTPException(status_code=404, detail='Error downloading cars.')
     store_cars = requests.post(f'http://store_cars_service:8000/api/v1/store/{store}',
-                               headers=headers,
+                               headers=headers_store,
                                json=download_cars)
     if store_cars.status_code not in (201, 409):
-        print(str(store_cars.status_code) + store)
         raise HTTPException(status_code=404, detail='Error storing cars.')
 
 
@@ -46,7 +61,6 @@ class Combined:
     async def get_and_store_all(self):
         """Download from /download endpoint and store via /store endpoint all cars
         plus calculate the mean and store it too."""
-        # Store all cars
 
         # Store cars info
         download_and_store("cars/", "cars/")

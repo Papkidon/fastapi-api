@@ -4,20 +4,29 @@ from fastapi_utils.inferring_router import InferringRouter
 from sqlalchemy.orm import Session
 from fastapi_utils.cbv import cbv
 
-from ..db.crud.store_cars import StoreCars
-from ..db.crud.store_usage import StoreUsage
-from ..db.crud.store_average import StoreAverage
+from ..db.crud.StoreCars import StoreCars
+from ..db.crud.StoreUsage import StoreUsage
+from ..db.crud.StoreAverage import StoreAverage
 from ..models import schemas, models
 from ..db.connection.db import SessionLocal
 from ..auth.auth import get_api_key
 
+# Create router
 store = InferringRouter()
 
 
+"""Store cars service implements the following endpoints :
+
+1. '/' - check if Store car service is available,
+2. '/cars/' - store information about cars in the database,
+3. '/usage/{model}' - store information about given car usage in the database,
+4. '/average/' - store information about averages calculated from information already stored in the database.
+
+"""
+
 def get_db():
-    """
-    Connect to the database.
-    """
+    """Get new database connection from connection pool
+    and close after code execution"""
     db = SessionLocal()
     try:
         yield db

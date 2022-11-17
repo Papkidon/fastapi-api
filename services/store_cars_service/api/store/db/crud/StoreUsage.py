@@ -1,14 +1,14 @@
 from datetime import datetime
-
 from sqlalchemy.orm import Session
 from ...models import schemas
 
+"""StoreUsage implements storing usage information of cars in the database"""
+
 
 class StoreUsage:
-
     _db_session: Session = None  # Database session
     _schema = None  # Schema of data to be put into database
-    _model = None # Model to be converted to from schema
+    _model = None  # Model to be converted to from schema
 
     def __init__(self, db: Session, schema, model):
         self._db_session = db
@@ -16,9 +16,11 @@ class StoreUsage:
         self._model = model
 
     def get_usage_by_timestamp(self, timestamp: datetime):
+        """Get usage information for a given timestamp"""
         return self._db_session.query(self._model).filter(self._model.datetime == timestamp).first()
 
-    def create_model(self):
+    def create_model(self) -> list:
+        """Create list of models from the usage data"""
         model_list = []
         schema_dict = self._schema.dict()
         for i in range(len(schema_dict['carStatistics'])):
@@ -29,7 +31,8 @@ class StoreUsage:
                                           status=schema_dict['carStatistics'][i]['status']))
         return model_list
 
-    def store_usage(self):
+    def store_usage(self) -> list:
+        """Store usage data in the database"""
         model_list = self.create_model()
         output_list = []
         for model in model_list:
@@ -42,6 +45,7 @@ class StoreUsage:
 
     @classmethod
     def convert_to_schema(cls, response):
+        """Convert to schema"""
         schema_list = []
         for model in response:
             schema_list.append(schemas.UsageDataOutput(vin=model.vin,

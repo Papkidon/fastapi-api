@@ -11,10 +11,23 @@ from ..db.crud.QueryAverage import QueryAverage
 from ..models import schemas, models
 from ..auth.auth import get_api_key
 
+"""
+
+Query cars service implements the following endpoints :
+
+1. '/' - check if Query car service is available,
+2. '/car-info/{car}' - query the db for a given car (or all cars) information with corresponding current soc,
+3. '/usage-data/{car}' - query the db for usage data of a given car (or all cars),
+4. '/average/{car}' - query the db for average charging power of a given car (or all cars).
+
+"""
+
 query = InferringRouter()
 
 
 def get_db():
+    """Get new database connection from connection pool
+    and close after code execution"""
     db = SessionLocal()
     try:
         yield db
@@ -24,8 +37,8 @@ def get_db():
 
 @cbv(query)
 class Query:
-    db: Session = Depends(get_db)
-    api_key: APIKey = Depends(get_api_key)
+    db: Session = Depends(get_db)  # Database session
+    api_key: APIKey = Depends(get_api_key)  # API key
 
     @query.get('/', status_code=200, include_in_schema=False)
     async def query_check(self):
@@ -69,10 +82,11 @@ class Query:
 
         def extend_if_not_none(response, schema_list):
             """Extend schema_list if response is not None
-                It means"""
+                It means that data exists in the database"""
             if response is not None:
                 schema_list.extend(QueryUsageData.convert_to_schema(response))
 
+        # Create instance of QueryUsageData
         query_usage_data = QueryUsageData(db=self.db)
 
         if car == 'porsche':
@@ -113,8 +127,7 @@ class Query:
     @query.get('/average/{car}', response_model=list[schemas.QueryAverage], status_code=200, tags=['query'])
     async def query_car_average(self, car: str):
         """
-        Averages first must be stored in the database by api/v1/store/average\n
-        Get average of all cars or selected car.\n
+        Get average charging power of all cars or selected car.\n
         Available parameters are:  <b>porsche, tesla, audi, all</b>
         """
         response = QueryAverage(db=self.db).get_average(car=car)

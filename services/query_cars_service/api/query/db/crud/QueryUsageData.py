@@ -1,7 +1,8 @@
 from typing import Union
-from ...models import schemas, models
-
+from ...models import schemas
 from sqlalchemy.orm import Session
+
+"""QueryUsageData implements querying 'audi', 'porsche', 'tesla' tables"""
 
 
 class QueryUsageData:
@@ -28,22 +29,8 @@ class QueryUsageData:
             return models_list
         return None
 
-    def get_usage_data_by_vin(self):
-        query = []
-        models_list = []
-        porsche = self._db_session.query(models.Porsche).all()
-        if porsche:
-            query.append(porsche)
-        audi = self._db_session.query(models.Audi).all()
-        if audi:
-            query.append(audi)
-        tesla = self._db_session.query(models.Tesla).all()
-        if tesla:
-            query.append(tesla)
-        return models_list
-
     @classmethod
-    def convert_to_schema(cls, response):
+    def convert_to_schema(cls, response) -> list:
         schema_list = []
         for model in response:
             schema_list.append(schemas.QueryDataItems(vin=model.vin,

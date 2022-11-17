@@ -2,22 +2,13 @@ from datetime import datetime, date
 from pydantic import BaseModel
 
 
-class ModelItem(BaseModel):
-    datetime: datetime
-    soc: int
-    chargingPower: float
-    status: str
-
-
-class CarItem(BaseModel):
-    made: str
-    model: str
-    year: date
-    vin: str
-
-
-class QueryCar(CarItem):
+class QueryCar(BaseModel):
+    """Represents validation schema of a '/car-info/{car}' endpoint"""
     id: int
+    vin: str
+    model: str
+    made: str
+    year: date
     current_soc: float
 
     class Config:
@@ -35,13 +26,11 @@ class QueryCar(CarItem):
         }
 
 
-class Average(BaseModel):
+class QueryAverage(BaseModel):
+    """Represents validation schema of a '/average/{car}' endpoint"""
+    id: int
     vin: str
     average: float
-
-
-class QueryAverage(Average):
-    id: int
 
     class Config:
         schema_extra = {
@@ -56,6 +45,7 @@ class QueryAverage(Average):
 
 
 class QueryDataItems(BaseModel):
+    """Represents validation schema of a '/usage-data/{car}' endpoint"""
     vin: str
     datetime: datetime
     chargingPower: float

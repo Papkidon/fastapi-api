@@ -8,15 +8,19 @@ from .. import main
 from ..store.db.connection.db import Base
 from ..store.router.store import get_db
 
+# New testing SQLite database
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
+# Create new testing engine
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
+# Create new testing session maker
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def override_get_db():
+    """Yield testing db connection"""
     try:
         db = TestingSessionLocal()
         yield db
@@ -24,13 +28,17 @@ def override_get_db():
         db.close()
 
 
+# Override main app dependencies with testing database connection
 main.app.dependency_overrides[get_db] = override_get_db
 
+# Create FastAPI TestClient instance
 client = TestClient(main.app)
 
 
 @pytest.fixture()
 def test_db():
+    """Fixture for creating tables,
+    executing some code, and finally dropping all tables"""
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
@@ -38,17 +46,20 @@ def test_db():
 
 @pytest.fixture()
 def anyio_backend():
+    """Asynchronous manner of testing"""
     return 'asyncio'
 
 
 @pytest.fixture()
 def headers():
+    """Fixture for testing with request headers"""
     return {'Content-Type': 'application/json',
             'Authorization': os.getenv('API_KEY')}
 
 
 @pytest.fixture(scope='session')
 def data_usage_correct():
+    """Fixture for including usage data in test"""
     return \
         {
             "vin": "PL990011",
@@ -65,6 +76,7 @@ def data_usage_correct():
 
 @pytest.fixture(scope='session')
 def data_response_usage_correct():
+    """Fixture for including correct response of storing usage data in test"""
     return \
         [
             {'datetime': '2020-03-10T11:00:00',
@@ -78,6 +90,7 @@ def data_response_usage_correct():
 
 @pytest.fixture(scope='session')
 def data_response_correct():
+    """Fixture for including correct response of usage data in test"""
     return \
         [
             {'chargingPower': 0.0,
@@ -91,6 +104,7 @@ def data_response_correct():
 
 @pytest.fixture(scope='session')
 def data_correct_cars():
+    """Fixture for including correct car information in test"""
     return \
         {
             "cars": [
@@ -106,6 +120,7 @@ def data_correct_cars():
 
 @pytest.fixture(scope='session')
 def data_correct_response_cars():
+    """Fixture for including correct response of storing cars info in test"""
     return \
         [
             {
@@ -119,4 +134,5 @@ def data_correct_response_cars():
 
 @pytest.fixture(scope='session')
 def data_incorrect():
+    """Fixture for including incorrect data to be stored in test"""
     return {"im": "bad"}

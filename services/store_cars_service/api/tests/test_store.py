@@ -8,6 +8,11 @@ async def test_store_correct_porsche(data_usage_correct,
                                      data_response_usage_correct,
                                      headers,
                                      test_db):
+    """
+        Tests: '/usage/porsche' endpoint
+        Expected response code: 201
+        Expected json: data_response_usage_correct
+    """
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.post('/api/v1/store/usage/porsche',
                                  headers=headers,
@@ -20,6 +25,10 @@ async def test_store_correct_porsche(data_usage_correct,
 async def test_store_incorrect_porsche(data_incorrect,
                                        headers,
                                        test_db):
+    """
+        Tests: '/usage/porsche' endpoint
+        Expected response code: 422
+    """
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.post('/api/v1/store/usage/porsche',
                                  headers=headers,
@@ -32,6 +41,11 @@ async def test_store_correct_audi(data_usage_correct,
                                   data_response_usage_correct,
                                   headers,
                                   test_db):
+    """
+        Tests: '/usage/audi' endpoint
+        Expected response code: 201
+        Expected json: data_response_usage_correct
+    """
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.post('/api/v1/store/usage/audi',
                                  headers=headers,
@@ -44,6 +58,10 @@ async def test_store_correct_audi(data_usage_correct,
 async def test_store_incorrect_audi(data_incorrect,
                                     headers,
                                     test_db):
+    """
+        Tests: '/usage/audi' endpoint
+        Expected response code: 422
+    """
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.post('/api/v1/store/usage/audi',
                                  headers=headers,
@@ -56,6 +74,11 @@ async def test_store_correct_tesla(data_usage_correct,
                                    data_response_usage_correct,
                                    headers,
                                    test_db):
+    """
+        Tests: '/usage/tesla' endpoint
+        Expected response code: 201
+        Expected json: data_response_usage_correct
+    """
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.post('/api/v1/store/usage/tesla',
                                  headers=headers,
@@ -68,6 +91,10 @@ async def test_store_correct_tesla(data_usage_correct,
 async def test_store_incorrect_tesla(data_incorrect,
                                      headers,
                                      test_db):
+    """
+        Tests: '/usage/tesla' endpoint
+        Expected response code: 422
+    """
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.post('/api/v1/store/usage/tesla',
                                  headers=headers,
@@ -80,6 +107,11 @@ async def test_store_correct_cars(data_correct_cars,
                                   data_correct_response_cars,
                                   headers,
                                   test_db):
+    """
+        Tests: '/store/cars' endpoint
+        Expected response code: 201
+        Expected json: data_correct_response_cars
+    """
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.post('/api/v1/store/cars/',
                                  headers=headers,
@@ -92,6 +124,10 @@ async def test_store_correct_cars(data_correct_cars,
 async def test_store_incorrect_cars(data_incorrect,
                                     headers,
                                     test_db):
+    """
+        Tests: '/store/cars' endpoint
+        Expected response code: 422
+    """
     async with AsyncClient(app=main.app, base_url='http://test') as ac:
         response = await ac.post('/api/v1/store/cars/',
                                  headers=headers,

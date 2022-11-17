@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class UsageDataNested(BaseModel):
+    """This class represents schema validation for nested usage data of car"""
     datetime: datetime
     soc: int
     chargingPower: float
@@ -11,6 +12,7 @@ class UsageDataNested(BaseModel):
 
 
 class UsageDataInput(BaseModel):
+    """This class represents schema validation for downloaded usage data of car"""
     vin: str
     carStatistics: list[UsageDataNested]
 
@@ -32,6 +34,7 @@ class UsageDataInput(BaseModel):
 
 
 class UsageDataOutput(UsageDataNested):
+    """This class represents schema validation for usage data returned by API"""
     vin: str
 
     class Config:
@@ -52,6 +55,7 @@ class UsageDataOutput(UsageDataNested):
 
 
 class CarOutput(BaseModel):
+    """This class represents schema validation for car info returned by API"""
     made: str
     model: str
     year: date
@@ -59,6 +63,7 @@ class CarOutput(BaseModel):
 
 
 class CarInput(BaseModel):
+    """This class represents scheme validation for car information"""
     cars: list[CarOutput]
 
     class Config:
@@ -78,6 +83,7 @@ class CarInput(BaseModel):
 
 
 class Average(BaseModel):
+    """This class represents schema validation for the average charging power"""
     vin: str
     average: float
 

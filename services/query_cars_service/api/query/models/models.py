@@ -3,6 +3,7 @@ from ..db.connect.db import Base
 
 
 class Cars(Base):
+    """Represents a database table of information about cars"""
     __tablename__ = 'cars'
 
     id = Column(Integer, primary_key=True)
@@ -11,17 +12,17 @@ class Cars(Base):
     year = Column(Date)
     vin = Column(String(20))
 
-
-class CreateCar(Cars):
     class Config:
         orm_mode = True
 
 
 class QueryCar(Cars):
+    """Represents model of creating query result of a car with current soc"""
     current_soc = Column(Float, index=True)
 
 
 class Tesla(Base):
+    """Represents a database table of information about tesla car usage"""
     __tablename__ = 'tesla'
 
     id = Column(Integer, primary_key=True)
@@ -31,13 +32,12 @@ class Tesla(Base):
     chargingPower = Column(Float, index=True)
     status = Column(String, index=True)
 
-
-class CreateTesla(Tesla):
     class Config:
         orm_mode = True
 
 
 class Audi(Base):
+    """Represents a database table of information about audi car usage"""
     __tablename__ = 'audi'
 
     id = Column(Integer, primary_key=True)
@@ -47,13 +47,12 @@ class Audi(Base):
     chargingPower = Column(Float, index=True)
     status = Column(String, index=True)
 
-
-class CreateAudi(Audi):
     class Config:
         orm_mode = True
 
 
 class Porsche(Base):
+    """Represents a database table of information about porsche car usage"""
     __tablename__ = 'porsche'
 
     id = Column(Integer, primary_key=True)
@@ -63,20 +62,17 @@ class Porsche(Base):
     chargingPower = Column(Float, index=True)
     status = Column(String, index=True)
 
-
-class CreatePorsche(Porsche):
     class Config:
         orm_mode = True
 
 
 class Average(Base):
+    """Represents a database table of information about cars average charging power"""
     __tablename__ = 'average'
 
     id = Column(Integer, primary_key=True)
     vin = Column(String, index=True)
     average = Column(Float, index=True)
 
-
-class CreateAverage(Average):
     class Config:
         orm_mode = True

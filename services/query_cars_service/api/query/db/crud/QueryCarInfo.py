@@ -4,24 +4,26 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from ...models import models, schemas
 
+"""QueryCarInfo implements querying 'cars' table"""
+
 
 class QueryCarInfo:
-    _db_session: Session = None  # Database session
-    _cars_vin_list: dict = {
+    __db_session: Session = None  # Database session
+    __cars_vin_list: dict = {
         'porsche': "PL110212",
         'tesla': "PL090201",
         'audi': "PL990011"
     }
 
     def __init__(self, db):
-        self._db_session = db
+        self.__db_session = db
 
     def query_current_charge(self, model):
         """
         Query the current charge for the given model. Returns
         current charge if found, None otherwise.
         """
-        return self._db_session.query(model.soc, func.max(model.datetime)) \
+        return self.__db_session.query(model.soc, func.max(model.datetime)) \
             .group_by(model.soc, model.datetime) \
             .order_by(model.datetime.desc()) \
             .first()
@@ -30,7 +32,7 @@ class QueryCarInfo:
         """
         Queries the 'cars' table and returns information about a car with given vin.
         """
-        return self._db_session.query(models.Cars) \
+        return self.__db_session.query(models.Cars) \
             .filter(models.Cars.vin == vin) \
             .first()
 
@@ -39,11 +41,11 @@ class QueryCarInfo:
         Query car info, returns information about a car with given model.
         """
         if model is models.Porsche:
-            car_info = self.query_car_info(vin=self._cars_vin_list.get('porsche'))
+            car_info = self.query_car_info(vin=self.__cars_vin_list.get('porsche'))
         elif model is models.Audi:
-            car_info = self.query_car_info(vin=self._cars_vin_list.get('audi'))
+            car_info = self.query_car_info(vin=self.__cars_vin_list.get('audi'))
         elif model is models.Tesla:
-            car_info = self.query_car_info(vin=self._cars_vin_list.get('tesla'))
+            car_info = self.query_car_info(vin=self.__cars_vin_list.get('tesla'))
         else:
             return None
         if car_info is not None:
@@ -61,9 +63,20 @@ class QueryCarInfo:
 
     def get_all_cars_info(self) -> list:
         """Get information about all cars, returns list of car information"""
-        response_list = [self.get_car_info(models.Porsche).pop(),
-                         self.get_car_info(models.Audi).pop(),
-                         self.get_car_info(models.Tesla).pop()]
+        response_list = []
+        porsche = self.get_car_info(models.Porsche)
+
+        if porsche is not None:
+            response_list.append(porsche.pop())
+        audi = self.get_car_info(models.Audi)
+
+        if audi is not None:
+            response_list.append(audi.pop())
+        tesla = self.get_car_info(models.Tesla)
+
+        if tesla is not None:
+            response_list.append(tesla.pop())
+
         # Remove all None values from response_list
         response_list = [element for element in response_list if element is not None]
         return response_list

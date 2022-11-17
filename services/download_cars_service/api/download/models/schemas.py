@@ -3,18 +3,20 @@ from datetime import datetime, date
 from pydantic import BaseModel
 
 
-# Cars
 class UsageDataNested(BaseModel):
+    """This class represents schema validation for nested usage data of car
+    Applicable to: Porsche, Tesla, Audi"""
     datetime: datetime
     soc: str
     chargingPower: int
     status: str
 
 
-# Porsche, Tesla, Audi
 class UsageData(BaseModel):
+    """This class represents schema validation for downloaded usage data of car
+    Applicable to: Porsche, Tesla, Audi"""
     vin: str
-    carStatistics: Union[list[UsageDataNested], None] = None
+    carStatistics: Union[list[UsageDataNested]]
 
     class Config:
         schema_extra = {
@@ -39,6 +41,7 @@ class UsageData(BaseModel):
 
 # Car Information
 class CarInfoNested(BaseModel):
+    """This class represents nested car information"""
     made: str
     model: str
     year: date
@@ -47,7 +50,8 @@ class CarInfoNested(BaseModel):
 
 # Porsche, Tesla, Audi
 class CarInfo(BaseModel):
-    cars: Union[list[CarInfoNested], None] = None
+    """This class represents scheme validation for car information"""
+    cars: list[CarInfoNested]
 
     class Config:
         schema_extra = {

@@ -7,18 +7,34 @@ import requests
 from ..auth.auth import get_api_key
 from ..models import schemas
 
+"""Download cars service implements the following endpoints :
+
+1. '/' - check if Download car service is available,
+2. '/cars/' - download information about cars from Mockachino API,
+3. '/audi/' - download information about audi usage from Mockachino API,
+4. '/porsche/' - download information about porsche usage from Mockachino API,
+5. '/tesla/' - download information about tesla usage from Mockachino API.
+
+"""
+
+
+# Create router
 download = InferringRouter()
 
+# Header of every request sent to Mockachino API
 headers = {'Content-type': 'application/json; charset=utf-8'}
+# URL to Mockachino API
 url = "https://www.mockachino.com/63df88f9-7c68-4e/"
 
 
 @cbv(download)
 class Download:
+    # Injecting APIKey dependency
     api_key: APIKey = Depends(get_api_key)
 
     @download.get('/', status_code=200, include_in_schema=False)
     def download_check(self):
+        """Check if"""
         return {'detail': 'Download service is up.'}
 
     @download.get("/cars/", status_code=200, response_model=schemas.CarInfo)

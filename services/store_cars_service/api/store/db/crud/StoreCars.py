@@ -1,6 +1,8 @@
 from ...models import schemas, models
 from sqlalchemy.orm import Session
 
+"""StoreCars implements storing cars information in the database"""
+
 
 class StoreCars:
     __db_session: Session = None  # Database session
@@ -10,20 +12,18 @@ class StoreCars:
         self.__db_session = db
         self.__car = car
 
-    @staticmethod
-    def get_car_by_vin(db: Session, vin: str):
+    def get_car_by_vin(self, vin: str):
         """
         Query the database for a car with the given vin
-        :parameter db: Database session
         :param vin: vin of the given car
         :return: result of the query
         """
-        return db.query(models.Cars).filter(models.Cars.vin == vin).first()
+        return self.__db_session.query(models.Cars).filter(models.Cars.vin == vin).first()
 
     @classmethod
     def convert_to_schema(cls, response) -> list:
         """
-        Convert models to schemas in order for them to be returned to API call
+        Convert models to schemas
         :parameter response: list of models to be converted
         :return: list of schemas
         """
@@ -43,7 +43,8 @@ class StoreCars:
         car_dict = self.__car.dict()
         db_car_list = []
         for i in range(0, len(car_dict['cars'])):
-            check_if_exists = self.get_car_by_vin(db=self.__db_session, vin=car_dict['cars'][i]['vin'])
+            check_if_exists = self.get_car_by_vin(vin=car_dict['cars'][i]['vin'])
+            # If it doesn't exist then store it in the database
             if not check_if_exists:
                 db_car = models.Cars(made=car_dict['cars'][i]['made'],
                                      model=car_dict['cars'][i]['model'],
