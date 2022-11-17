@@ -15,16 +15,16 @@
 
 * <b>download_cars_service</b>
   * is responsible for downloading data from Mockachino API.
-    * (localhost:8080/api/v1/download/docs/)
+    * localhost:8080/api/v1/download/docs/
 * <b>store_cars_service</b>
   * is responsible for storing data in the database.
-    * (localhost:8080/api/v1/store/docs/)
+    * localhost:8080/api/v1/store/docs/
 * <b>query_cars_service</b>
   * is responsible for sending prepared statements to the database.
-    * (localhost:8080/api/v1/query/docs/)
+    * localhost:8080/api/v1/query/docs/
 * <b>combined_cars_service</b>
   * is responsible for downloading, storing data, calculating averages and storing them.
-    * (localhost:8080/api/v1/combined/docs/)
+    * localhost:8080/api/v1/combined/docs/
     
 ## Build and create containers
 
