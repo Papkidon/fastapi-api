@@ -28,7 +28,7 @@
     
 ## Build and create containers
 
-`cd` into project folder and run `docker-compose up -d --build`
+`cd` into project folder and run `docker-compose up -d --build` or `docker compose up`
 
 ## Routing
 
